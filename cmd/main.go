@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"marco-calculator/pkg/helpers"
 	"os"
+	"regexp"
 	"strconv"
-	"strings"
 
 	"github.com/common-nighthawk/go-figure"
 )
@@ -35,10 +35,17 @@ func main() {
 
 	input, err := reader.ReadString('\n')
 
-	number, err := strconv.ParseFloat(strings.TrimSuffix(input, "\n"), 64)
+	// regular expression that matches all non 0-9 inclusive characters
+	reg, err := regexp.Compile("[^0-9]+")
+	if err != nil {
+		panic(err)
+	}
+
+	// parse input after all non numerical characters removal
+	number, err := strconv.ParseFloat(reg.ReplaceAllLiteralString(input, ""), 64)
 
 	if err != nil {
-		fmt.Println("Um erro ocorreu: ", err.Error())
+		panic(err)
 	}
 
 	// converting from kg to lbs
@@ -64,24 +71,27 @@ func main() {
 	carbsCalories := helpers.CaloriesFromCarbs(carbs)
 	caloriesBeforeFat := proteinCalories + carbsCalories
 
-	fmt.Printf("As calorias somadas até agora são %.0f\n", caloriesBeforeFat)
+	// fmt.Printf("As calorias somadas até agora são %.0f\n", caloriesBeforeFat)
 
 	remainingCalories := calories - caloriesBeforeFat
-	fmt.Printf("As calorias restantes são %.0f\n", remainingCalories)
+	// fmt.Printf("As calorias restantes são %.0f\n", remainingCalories)
 
 	fat := helpers.CalculateFat(remainingCalories)
 	fmt.Printf("O consumo recomendado de gordura é de %.0fg\n", fat)
 
 	fatCalories := helpers.CaloriesFromFat(fat)
 	totalCalories := proteinCalories + carbsCalories + fatCalories
-	fmt.Printf("A quantidade prevista de calorias foi %0.f, a quantidade obtida de calorias foi %0.f\n", calories, totalCalories)
+	// fmt.Printf("A quantidade prevista de calorias foi %0.f, a quantidade obtida de calorias foi %0.f\n", calories, totalCalories)
 
 	fmt.Printf(`
-	+--------------+----------+---------+
-	| carboidratos | proteína | gordura |
-	+--------------+----------+---------+
-	|      %.0fg    |    %.0fg  |    %.0fg  |
-	+--------------+----------+---------+
+	╔══════════╤═════════════╤══════════╤═════════╗
+	║ calorias │ carboidrato │ proteína │ gordura ║
+	╠══════════╪═════════════╪══════════╪═════════╣
+	║ %.0fcal  │ %.0fg        │ %.0fg     │ %.0fg     ║
+	╚══════════╧═════════════╧══════════╧═════════╝
 	
-	`, carbs, protein, fat)
+	`, totalCalories, carbs, protein, fat)
+
+	fmt.Print("Pressione 'Enter' para terminar o programa...")
+	bufio.NewReader(os.Stdin).ReadBytes('\n')
 }
