@@ -1,5 +1,9 @@
 package helpers
 
+import (
+	"errors"
+)
+
 // KgToLbs takes a pointer to a float and a float and alters the value of a variable from kg to lbs
 func KgToLbs(kgPtr *float64, kg float64) float64 {
 	*kgPtr = kg * 2.2046
@@ -40,4 +44,16 @@ func CalculateFat(remainingCalories float64) float64 {
 func CaloriesFromFat(fat float64) float64 {
 	fatCalories := fat * 9
 	return fatCalories
+}
+
+// TotalCalories gets all individual macro calories and returns the total, whilst also checking if the calculations were consistent with the predicted caloric intake
+func TotalCalories(proteinCalories float64, carbsCalories float64, fatCalories float64, predictedCalories float64) (float64, error) {
+	totalCalories := proteinCalories + carbsCalories + fatCalories
+
+	if totalCalories != predictedCalories {
+		return totalCalories, errors.New("Erro de cálculo, as calorias previstas e obtidas não foram iguais!")
+
+	} else {
+		return totalCalories, nil
+	}
 }

@@ -11,7 +11,7 @@ import (
 	"github.com/common-nighthawk/go-figure"
 )
 
-// global variables
+// constant declaration
 const CaloriesPerGramOfProtein = 4
 
 const CaloriesPerGramOfFat = 9
@@ -29,7 +29,7 @@ func main() {
 	title3.Print()
 
 	fmt.Printf("\n\n\n\n\n\n")
-	fmt.Println("Insira o seu peso em quilos marcando eventuais casas decimais com ponto.")
+	fmt.Println("Insira o seu peso alvo em quilos marcando eventuais casas decimais com ponto.")
 	fmt.Printf("Por exemplo, \"88.50\"\n")
 	fmt.Printf("-> ")
 
@@ -71,17 +71,16 @@ func main() {
 	carbsCalories := helpers.CaloriesFromCarbs(carbs)
 	caloriesBeforeFat := proteinCalories + carbsCalories
 
-	// fmt.Printf("As calorias somadas até agora são %.0f\n", caloriesBeforeFat)
-
 	remainingCalories := calories - caloriesBeforeFat
-	// fmt.Printf("As calorias restantes são %.0f\n", remainingCalories)
 
 	fat := helpers.CalculateFat(remainingCalories)
 	fmt.Printf("O consumo recomendado de gordura é de %.0fg\n", fat)
 
 	fatCalories := helpers.CaloriesFromFat(fat)
-	totalCalories := proteinCalories + carbsCalories + fatCalories
-	// fmt.Printf("A quantidade prevista de calorias foi %0.f, a quantidade obtida de calorias foi %0.f\n", calories, totalCalories)
+	totalCalories, err := helpers.TotalCalories(proteinCalories, carbsCalories, fatCalories, calories)
+	if err != nil {
+		panic(err)
+	}
 
 	fmt.Printf(`
 	╔══════════╤═════════════╤══════════╤═════════╗
