@@ -14,24 +14,19 @@ Clone o repositório com
 git clone https://github.com/pedro-git-projects/calculadora-de-macros
 ```
 
-Navegue até o diretório cmd:
-
-```
-cd cmd
-```
 
 Para gerar um arquivo executável execute o comando:
 
 ```
-go build *.go
+make build
 ```
 
 Para apenas rodar o programa utilize o comando: 
 
 ```
-go run *.go
+make run
 ```
 
 ## Imagem
 
-![Calculadora de Macros](/imgs/calc.png "Calculadora de Macros")
+![Calculadora de Macros](/imgs/calc_new.png "Calculadora de Macros")

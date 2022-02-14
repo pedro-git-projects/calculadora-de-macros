@@ -1,4 +1,4 @@
-module marco-calculator
+module github.com/pedro-git-projects/calculadora-de-macros
 
 go 1.17
 
